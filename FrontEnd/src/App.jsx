@@ -11,6 +11,7 @@ import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
 import Product from "./pages/Product";
 import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
 
 function App() {
     return (
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/product/:productId" element={<Product />} />
             </Routes>
+            <Footer />
         </div>
     );
 }
