@@ -1,50 +1,73 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContex";
 import { assets } from "../assets/assets";
+import Title from "../components/Title";
+import ProductItem from "../components/ProductItem";
 
 const Collection = () => {
     const { products } = useContext(ShopContext);
-    const [showFilters, setShowFilters] = React.useState(false);
+    const [showFilters, setShowFilters] = useState(false);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    useEffect(() => {
+        setFilteredProducts(products);
+    }, []);
     return (
         <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
             {/* filter options */}
-            <div class="min-w-60">
-                <p class="my-2 text-xl flex items-center cursor-pointer gap-2" onClick={() => setShowFilters(!showFilters)}>
+            <div className="min-w-60">
+                <p className="my-2 text-xl flex items-center cursor-pointer gap-2" onClick={() => setShowFilters(!showFilters)}>
                     FILTERS
-                    <img class={`h-3 sm:hidden ${showFilters ? "rotate-90" : ""} `} src={assets.dropdown_icon} alt="" />
+                    <img className={`h-3 sm:hidden ${showFilters ? "rotate-90" : ""} `} src={assets.dropdown_icon} alt="" />
                 </p>
                 {/* categores filfter */}
                 <div className={`border border-gray-300 pl-5 py-3 mt-6  sm:block ${showFilters ? "" : "hidden"}`}>
-                    <p class="mb-3 text-sm font-medium">CATEGORIES</p>
-                    <div class="flex flex-col gap-2 text-sm font-light text-gray-700">
-                        <p class="flex gap-2">
-                            <input class="w-3" type="checkbox" value="Men" /> Men
+                    <p className="mb-3 text-sm font-medium">CATEGORIES</p>
+                    <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
+                        <p className="flex gap-2">
+                            <input className="w-3" type="checkbox" value="Men" /> Men
                         </p>
-                        <p class="flex gap-2">
-                            <input class="w-3" type="checkbox" value="Women" /> Women
+                        <p className="flex gap-2">
+                            <input className="w-3" type="checkbox" value="Women" /> Women
                         </p>
-                        <p class="flex gap-2">
-                            <input class="w-3" type="checkbox" value="Kids" /> kids
+                        <p className="flex gap-2">
+                            <input className="w-3" type="checkbox" value="Kids" /> kids
                         </p>
                     </div>
                 </div>
                 {/* subCategory filter */}
-                <div class={`border border-gray-300 pl-5 py-3 my-5  sm:block ${showFilters ? "" : "hidden"}`}>
-                    <p class="mb-3 text-sm font-medium">TYPE</p>
-                    <div class="flex flex-col gap-2 text-sm font-light text-gray-700">
-                        <p class="flex gap-2">
-                            <input class="w-3" type="checkbox" value="Topwear" /> Topwear
+                <div className={`border border-gray-300 pl-5 py-3 my-5  sm:block ${showFilters ? "" : "hidden"}`}>
+                    <p className="mb-3 text-sm font-medium">TYPE</p>
+                    <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
+                        <p className="flex gap-2">
+                            <input className="w-3" type="checkbox" value="Topwear" /> Topwear
                         </p>
-                        <p class="flex gap-2">
-                            <input class="w-3" type="checkbox" value="Bottomwear" /> Bottomwear
+                        <p className="flex gap-2">
+                            <input className="w-3" type="checkbox" value="Bottomwear" /> Bottomwear
                         </p>
-                        <p class="flex gap-2">
-                            <input class="w-3" type="checkbox" value="Winterwear" /> Winterwear
+                        <p className="flex gap-2">
+                            <input className="w-3" type="checkbox" value="Winterwear" /> Winterwear
                         </p>
                     </div>
                 </div>
             </div>
             {/* right seide section */}
+            <div className="flex-1">
+                <div className="flex justify-between text-base sm:text-2xl mb-4">
+                    <Title text1={"ALL"} text2={"COLLECTIONS"} />
+                    {/* Product Sort */}
+                    <select className="border-2 border-gray-300 text-sm px-2">
+                        <option value="relavent">Sort by: Relavent</option>
+                        <option value="low-high">Sort by: Low to High</option>
+                        <option value="high-low">Sort by: High to Low</option>
+                    </select>
+                </div>
+                {/* add collection images */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
+                    {filteredProducts.map((item, idx) => (
+                        <ProductItem key={idx} id={item._id} name={item.name} price={item.price} image={item.image} />
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };
