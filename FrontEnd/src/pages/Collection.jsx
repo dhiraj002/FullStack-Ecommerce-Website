@@ -8,9 +8,55 @@ const Collection = () => {
     const { products } = useContext(ShopContext);
     const [showFilters, setShowFilters] = useState(false);
     const [filteredProducts, setFilteredProducts] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState([]);
+    const [selectedSubCategory, setSelectedSubCategory] = useState([]);
+
+    const [sortType, setSortType] = useState("relavent");
+
+    const handleCategoryChange = (e) => {
+        if (selectedCategory.includes(e.target.value)) {
+            setSelectedCategory((prev) => prev.filter((item) => item !== e.target.value));
+        } else {
+            setSelectedCategory((prev) => [...prev, e.target.value]);
+        }
+    };
+
+    const handleSubCategoryChange = (e) => {
+        if (selectedSubCategory.includes(e.target.value)) {
+            setSelectedSubCategory((prev) => prev.filter((item) => item !== e.target.value));
+        } else {
+            setSelectedSubCategory((prev) => [...prev, e.target.value]);
+        }
+    };
+
+    let applyFilters = () => {
+        let producCopy = [...products];
+        if (selectedCategory.length > 0) {
+            producCopy = producCopy.filter((item) => selectedCategory.includes(item.category));
+            // setFilteredProducts(filtered);
+        }
+        if (selectedSubCategory.length > 0) {
+            producCopy = producCopy.filter((item) => selectedSubCategory.includes(item.subCategory));
+            // setFilteredProducts(filtered);
+        }
+        switch (sortType) {
+            case "low-high":
+                producCopy.sort((a, b) => a.price - b.price);
+                break;
+            case "high-low":
+                producCopy.sort((a, b) => b.price - a.price);
+                break;
+            default:
+                break;
+        }
+
+        setFilteredProducts(producCopy);
+    };
+
     useEffect(() => {
-        setFilteredProducts(products);
-    }, []);
+        applyFilters();
+    }, [selectedCategory, selectedSubCategory, sortType]);
+
     return (
         <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
             {/* filter options */}
@@ -24,13 +70,13 @@ const Collection = () => {
                     <p className="mb-3 text-sm font-medium">CATEGORIES</p>
                     <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
                         <p className="flex gap-2">
-                            <input className="w-3" type="checkbox" value="Men" /> Men
+                            <input className="w-3" type="checkbox" value={"Men"} onChange={handleCategoryChange} checked={selectedCategory.includes("Men")} /> Men
                         </p>
                         <p className="flex gap-2">
-                            <input className="w-3" type="checkbox" value="Women" /> Women
+                            <input className="w-3" type="checkbox" value={"Women"} onChange={handleCategoryChange} checked={selectedCategory.includes("Women")} /> Women
                         </p>
                         <p className="flex gap-2">
-                            <input className="w-3" type="checkbox" value="Kids" /> kids
+                            <input className="w-3" type="checkbox" value={"Kids"} onChange={handleCategoryChange} checked={selectedCategory.includes("Kids")} /> Kids
                         </p>
                     </div>
                 </div>
@@ -39,23 +85,33 @@ const Collection = () => {
                     <p className="mb-3 text-sm font-medium">TYPE</p>
                     <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
                         <p className="flex gap-2">
-                            <input className="w-3" type="checkbox" value="Topwear" /> Topwear
+                            <input className="w-3" type="checkbox" value="Topwear" onChange={handleSubCategoryChange} checked={selectedSubCategory.includes("Topwear")} /> Topwear
                         </p>
                         <p className="flex gap-2">
-                            <input className="w-3" type="checkbox" value="Bottomwear" /> Bottomwear
+                            <input className="w-3" type="checkbox" value="Bottomwear" onChange={handleSubCategoryChange} checked={selectedSubCategory.includes("Bottomwear")} /> Bottomwear
                         </p>
                         <p className="flex gap-2">
-                            <input className="w-3" type="checkbox" value="Winterwear" /> Winterwear
+                            <input className="w-3" type="checkbox" value="Winterwear" onChange={handleSubCategoryChange} checked={selectedSubCategory.includes("Winterwear")} /> Winterwear
                         </p>
                     </div>
                 </div>
+                <button
+                    onClick={() => {
+                        setSelectedCategory([]);
+                        setSelectedSubCategory([]);
+                        setSortType("relavent");
+                    }}
+                    className="text-sm text-blue-500 underline mt-2"
+                >
+                    Reset Filters
+                </button>
             </div>
             {/* right seide section */}
             <div className="flex-1">
                 <div className="flex justify-between text-base sm:text-2xl mb-4">
                     <Title text1={"ALL"} text2={"COLLECTIONS"} />
                     {/* Product Sort */}
-                    <select className="border-2 border-gray-300 text-sm px-2">
+                    <select className="border-2 border-gray-300 text-sm px-2" onChange={(e) => setSortType(e.target.value)} value={sortType}>
                         <option value="relavent">Sort by: Relavent</option>
                         <option value="low-high">Sort by: Low to High</option>
                         <option value="high-low">Sort by: High to Low</option>
@@ -63,9 +119,7 @@ const Collection = () => {
                 </div>
                 {/* add collection images */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
-                    {filteredProducts.map((item, idx) => (
-                        <ProductItem key={idx} id={item._id} name={item.name} price={item.price} image={item.image} />
-                    ))}
+                    {filteredProducts.length == 0 ? "No Products Found" : filteredProducts.map((item, idx) => <ProductItem key={idx} id={item._id} name={item.name} price={item.price} image={item.image} />)}
                 </div>
             </div>
         </div>
