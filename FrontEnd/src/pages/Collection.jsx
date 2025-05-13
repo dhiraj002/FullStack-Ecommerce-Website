@@ -3,6 +3,7 @@ import { ShopContext } from "../context/ShopContex";
 import { assets } from "../assets/assets";
 import Title from "../components/Title";
 import ProductItem from "../components/ProductItem";
+import CheckboxFilter from "../components/CheckboxFilter";
 
 const Collection = () => {
     const { products } = useContext(ShopContext);
@@ -66,35 +67,11 @@ const Collection = () => {
                     <img className={`h-3 sm:hidden ${showFilters ? "rotate-90" : ""} `} src={assets.dropdown_icon} alt="" />
                 </p>
                 {/* categores filfter */}
-                <div className={`border border-gray-300 pl-5 py-3 mt-6  sm:block ${showFilters ? "" : "hidden"}`}>
-                    <p className="mb-3 text-sm font-medium">CATEGORIES</p>
-                    <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
-                        <p className="flex gap-2">
-                            <input className="w-3" type="checkbox" value={"Men"} onChange={handleCategoryChange} checked={selectedCategory.includes("Men")} /> Men
-                        </p>
-                        <p className="flex gap-2">
-                            <input className="w-3" type="checkbox" value={"Women"} onChange={handleCategoryChange} checked={selectedCategory.includes("Women")} /> Women
-                        </p>
-                        <p className="flex gap-2">
-                            <input className="w-3" type="checkbox" value={"Kids"} onChange={handleCategoryChange} checked={selectedCategory.includes("Kids")} /> Kids
-                        </p>
-                    </div>
-                </div>
+
+                <CheckboxFilter title="Categories" options={["Men", "Women", "Kids"]} selectedOptions={selectedCategory} onChange={handleCategoryChange} showFilter={showFilters} />
+
                 {/* subCategory filter */}
-                <div className={`border border-gray-300 pl-5 py-3 my-5  sm:block ${showFilters ? "" : "hidden"}`}>
-                    <p className="mb-3 text-sm font-medium">TYPE</p>
-                    <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
-                        <p className="flex gap-2">
-                            <input className="w-3" type="checkbox" value="Topwear" onChange={handleSubCategoryChange} checked={selectedSubCategory.includes("Topwear")} /> Topwear
-                        </p>
-                        <p className="flex gap-2">
-                            <input className="w-3" type="checkbox" value="Bottomwear" onChange={handleSubCategoryChange} checked={selectedSubCategory.includes("Bottomwear")} /> Bottomwear
-                        </p>
-                        <p className="flex gap-2">
-                            <input className="w-3" type="checkbox" value="Winterwear" onChange={handleSubCategoryChange} checked={selectedSubCategory.includes("Winterwear")} /> Winterwear
-                        </p>
-                    </div>
-                </div>
+                <CheckboxFilter title="Type" options={["Topwear", "Bottomwear", "Winterwear"]} selectedOptions={selectedSubCategory} onChange={handleSubCategoryChange} />
                 <button
                     onClick={() => {
                         setSelectedCategory([]);
