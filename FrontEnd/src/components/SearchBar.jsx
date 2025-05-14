@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useContext, useState } from "react";
-import { ShopContext } from "../context/ShopContex";
+import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
 import { useLocation } from "react-router-dom";
 const SearchBar = () => {
