@@ -12,6 +12,8 @@ const Collection = () => {
     const [selectedCategory, setSelectedCategory] = useState([]);
     const [selectedSubCategory, setSelectedSubCategory] = useState([]);
 
+    const { searchQuery, setSearchQuery, showSearch } = useContext(ShopContext);
+
     const [sortType, setSortType] = useState("relavent");
 
     const handleCategoryChange = (e) => {
@@ -51,12 +53,19 @@ const Collection = () => {
                 break;
         }
 
+        if (showSearch && searchQuery) {
+            producCopy = producCopy.filter((product) => {
+                const query = searchQuery.toLowerCase().trim();
+                return product.name.toLowerCase().includes(query) || product.category.toLowerCase().includes(query);
+            });
+        }
+
         setFilteredProducts(producCopy);
     };
 
     useEffect(() => {
         applyFilters();
-    }, [selectedCategory, selectedSubCategory, sortType]);
+    }, [selectedCategory, selectedSubCategory, sortType, searchQuery]);
 
     return (
         <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
@@ -77,6 +86,7 @@ const Collection = () => {
                         setSelectedCategory([]);
                         setSelectedSubCategory([]);
                         setSortType("relavent");
+                        setSearchQuery("");
                     }}
                     className="text-sm text-blue-500 underline mt-2"
                 >
