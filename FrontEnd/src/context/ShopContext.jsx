@@ -31,9 +31,21 @@ const ShopContextProvider = ({ children }) => {
         setCartItems(cartData);
     };
 
-    useEffect(() => {
-        console.log(cartItems);
-    }, [cartItems]);
+    const getCartCount = function () {
+        let count = 0;
+        for (const item in cartItems) {
+            for (const size in cartItems[item]) {
+                try {
+                    if (cartItems[item][size] > 0) {
+                        count += cartItems[item][size];
+                    }
+                } catch (error) {
+                    console.error("Error in getCartCount:", error);
+                }
+            }
+        }
+        return count;
+    };
 
     const value = {
         products,
@@ -45,6 +57,7 @@ const ShopContextProvider = ({ children }) => {
         setShowSearch,
         addToCart,
         cartItems,
+        getCartCount,
     };
 
     return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
